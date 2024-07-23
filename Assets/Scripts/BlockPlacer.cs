@@ -53,7 +53,7 @@ public class BlockPlacer : MonoBehaviour
         i++;
         currentBlock = Instantiate(blockPrefab);
         SpawnedBlock.Add(currentBlock);
-        currentBlock.transform.localScale = previousBlock.transform.localScale;
+        StartCoroutine(ResizeCurrent(currentBlock));
         currentBlock.name = currentBlock.name + i.ToString();
         currentBlock.GetComponent<MeshRenderer>().material = randomMat[Random.Range(0,randomMat.Length)];
         currentBlock.GetComponent<CubeMovement>().Id += i;
@@ -140,5 +140,10 @@ public class BlockPlacer : MonoBehaviour
             BlockSpeed += 5;
             //reloadscene
         }
+    }
+    private IEnumerator ResizeCurrent(GameObject current)
+    {
+        yield return new WaitForSeconds(0.005f);
+        current.transform.localScale = previousBlock.transform.localScale;
     }
 }
