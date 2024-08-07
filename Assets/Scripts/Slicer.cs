@@ -6,6 +6,9 @@ public class Slicer : MonoBehaviour
     public bool isLeft;
     public bool doOneTime = true;
     private Vector3 endPoint;
+
+    public GameObject current;
+    public GameObject previous;
     private void OnTriggerEnter(Collider other)
     {
         if(other.tag == "CanSlice" && canSlice && other.GetComponent<CubeMovement>().Id == (GameManager.Instance.placer.i -1))
@@ -38,6 +41,7 @@ public class Slicer : MonoBehaviour
             obj.transform.localScale = new Vector3(xScale, obj.transform.localScale.y, obj.transform.localScale.z);
             obj.transform.position = new Vector3((newobj.transform.localScale.x / 2) + obj.transform.position.x, obj.transform.position.y, obj.transform.position.z);
             newobj.AddComponent<Rigidbody>();
+            newobj.GetComponent<MeshRenderer>().material = GameManager.Instance.placer.randomMat[GameManager.Instance.placer.matIndex -1];
             Destroy(newobj, 1f);
             doOneTime = false;
         }
@@ -57,8 +61,10 @@ public class Slicer : MonoBehaviour
             obj.transform.localScale = new Vector3(xScale, obj.transform.localScale.y, obj.transform.localScale.z);
             obj.transform.position = new Vector3(obj.transform.position.x - (newobj.transform.localScale.x / 2), obj.transform.position.y, obj.transform.position.z);
             newobj.AddComponent<Rigidbody>();
+            newobj.GetComponent<MeshRenderer>().material = GameManager.Instance.placer.randomMat[GameManager.Instance.placer.matIndex -1];
             Destroy(newobj, 1f);
             doOneTime = false;  
         }
+        GameManager.Instance.placer.CanResize = true;
     }
 }

@@ -8,7 +8,10 @@ public class BlockPlacer : MonoBehaviour
     public GameObject currentBlock;
     public GameObject previousBlock;
     public GameObject Checker;
-    public int i = 0;
+
+    [HideInInspector]public int i = 0;
+    [HideInInspector]public int matIndex = 0;
+
     [Space]
     public List<GameObject> SpawnedBlock;
     [Space]
@@ -16,23 +19,26 @@ public class BlockPlacer : MonoBehaviour
     [Space]
     [SerializeField] private SlicerSpawner spawner;
     [Space]
-    [SerializeField] private Material[] randomMat = new Material[5];
+    public Material[] randomMat = new Material[5];
     [Space]
     public float blockHeight = 1f; // Blok yüksekliði
     public float BlockSpeed = 1f;
 
     public bool CanTouch = true;
     private bool OneTime = true;
+    [HideInInspector] public bool CanResize = false;
 
-    private Vector3 BlockPlacerStartPos;
+    [SerializeField]private Vector3 BlockPlacerStartPos;
     private Vector3 MainCamStartPos;
 
     void Start()
     {
-        SpawnBlock();
+        blockPrefab.transform.localScale = previousBlock.transform.localScale;
+        SpawnBlock(true);
+        transform.position = new Vector3(transform.position.x, previousBlock.transform.localScale.y, transform.position.z);
         BlockPlacerStartPos = this.transform.position;
         MainCamStartPos = Camera.main.transform.position;
-        BlockPlacerStartPos.y -= (blockHeight * 2);
+        blockHeight = previousBlock.transform.localScale.y;
         MainCamStartPos.y -= blockHeight;
     }
 
@@ -44,28 +50,35 @@ public class BlockPlacer : MonoBehaviour
             spawner.Cube = previousBlock;
             spawner.SpawnSlicer();
             PlaceBlock();
-
+        }
+        if (CanResize)
+        {
+            ResizeCurrent(currentBlock, previousBlock);
+            CanResize = false;
         }
     }
 
-    public void SpawnBlock()
+    public void SpawnBlock(bool needUp)
     {
         i++;
         currentBlock = Instantiate(blockPrefab);
-        SpawnedBlock.Add(currentBlock);
-        StartCoroutine(ResizeCurrent(currentBlock));
+        
         currentBlock.name = currentBlock.name + i.ToString();
-        currentBlock.GetComponent<MeshRenderer>().material = randomMat[Random.Range(0,randomMat.Length)];
+        SpawnedBlock.Add(currentBlock);
+        ChangeMaterial();
+
         currentBlock.GetComponent<CubeMovement>().Id += i;
+
         var Movement = currentBlock.GetComponent<CubeMovement>();
         Movement.Speed = BlockSpeed;
         Movement.PointA = Limits[0];
         Movement.PointB = Limits[1];
+
         if (previousBlock != null)
         {
             currentBlock.transform.position = new Vector3(
                 transform.position.x,
-                previousBlock.transform.position.y + blockHeight+ 0.01f,
+                previousBlock.transform.position.y + blockHeight,
                 transform.position.z
             );
         }
@@ -74,25 +87,33 @@ public class BlockPlacer : MonoBehaviour
             // Ýlk blok için baþlangýç pozisyonu belirle
             currentBlock.transform.position = transform.position;
         }
-
-        // Kamerayý yukarý kaydýr
-        Camera.main.transform.position = new Vector3(
-            Camera.main.transform.position.x,
-            Camera.main.transform.position.y + blockHeight + 0.01f,
-            Camera.main.transform.position.z
-        );
-        transform.position = new Vector3(
-            transform.position.x,
-            transform.position.y + blockHeight + 0.01f,
-            transform.position.z
-            );
         if (OneTime)
         {
             OneTime = false;
             return;
         }
-        GameManager.Instance.IncraseScore();
-        BlockSpeed += 0.2f;
+        if (needUp)
+        {
+            // Kamerayý yukarý kaydýr
+            Camera.main.transform.position = new Vector3(
+                Camera.main.transform.position.x,
+                Camera.main.transform.position.y + blockHeight + 0.01f,
+                Camera.main.transform.position.z
+            );
+            transform.position = new Vector3(
+                transform.position.x,
+                transform.position.y + blockHeight,
+                transform.position.z
+                );
+        }
+    }
+
+    private void ChangeMaterial()
+    {
+        currentBlock.GetComponent<MeshRenderer>().material = randomMat[matIndex];
+        matIndex++;
+        if (matIndex == randomMat.Length)
+            matIndex = 0;
     }
 
     void PlaceBlock()
@@ -103,15 +124,17 @@ public class BlockPlacer : MonoBehaviour
         Debug.Log("Calculateden çýktý");
         previousBlock = currentBlock;
         Debug.Log("previous deðiþti");
-        SpawnBlock();
+        SpawnBlock(true);
     }
 
     public void CalculateHangover() 
     {
         GameObject checker = Instantiate(Checker, previousBlock.transform.position, Quaternion.identity);
         checker.transform.localScale = previousBlock.transform.localScale;
+        checker.transform.position = previousBlock.transform.position;
         checker.transform.SetParent(previousBlock.transform);
-        checker.GetComponent<BoxCollider>().center = new Vector3(0, 2, 0);
+        checker.transform.localPosition = Vector3.zero;
+        checker.GetComponent<BoxCollider>().center = new Vector3(0, 1f, 0);
         checker.SetActive(true);
         StartCoroutine(check(checker));
     }
@@ -120,30 +143,32 @@ public class BlockPlacer : MonoBehaviour
         yield return new WaitForSeconds(0.1f);
         if (checker.GetComponent<Check>().CheckRes)
         {
-            //devam
+            GameManager.Instance.IncraseScore();
+            if ((GameManager.Instance.GetScore() % 5) == 0)
+                BlockSpeed += 0.2f;
         }
         else
         {
             CanTouch = false;
-            Debug.Log("YandýnBrom");
             for (int i = 0; i < SpawnedBlock.Count; i++) 
             {
                 Destroy(SpawnedBlock[i]);
             }
             SpawnedBlock.Clear();
-            this.transform.position = BlockPlacerStartPos;
+            transform.position = BlockPlacerStartPos;
             Camera.main.transform.position = MainCamStartPos;
             previousBlock = GameManager.Instance.BaseCube;
             GameManager.Instance.BaseCube.GetComponent<CubeMovement>().ClearChilds();
-            GameManager.Instance.StartCoroutine(GameManager.Instance.ResetCounter(this));
             CanTouch = true;
-            BlockSpeed += 5;
+            SpawnBlock(false);
             //reloadscene
         }
     }
-    private IEnumerator ResizeCurrent(GameObject current)
+
+    private void ResizeCurrent(GameObject currentBlock, GameObject previousBlock)
     {
-        yield return new WaitForSeconds(0.005f);
-        current.transform.localScale = previousBlock.transform.localScale;
+        Debug.Log("Önceki previus block adý: " + previousBlock.name);
+        Debug.Log("Þu anki current block adý: " + currentBlock);
+        currentBlock.transform.localScale = previousBlock.transform.localScale;
     }
 }

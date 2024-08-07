@@ -52,11 +52,15 @@ public class GameManager : MonoBehaviour
         Score += 1;
         ScoreText.text = "Score: " + Score.ToString();
     }
+    public int GetScore()
+    {
+        return Score;
+    }
     public void ScreenClick()
     {
         ScreenClickObj.SetActive(false);
     }
-    public IEnumerator ResetCounter(BlockPlacer placer)
+    /*public IEnumerator ResetCounter(BlockPlacer placer)
     {
         RestartCounter.gameObject.SetActive(true);
         RestartCounter.text = "2";
@@ -67,5 +71,5 @@ public class GameManager : MonoBehaviour
         yield return new WaitForSeconds(0.2f);
         RestartCounter.gameObject.SetActive(false);
         placer.SpawnBlock();
-    }
+    }*/
 }

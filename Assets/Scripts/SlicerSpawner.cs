@@ -28,6 +28,7 @@ public class SlicerSpawner : MonoBehaviour
         // Slicer nesnesini instantiate et ve konumunu ayarla
         GameObject SlicerLeft = Instantiate(Slicer, topEdgeLeft, Quaternion.identity);
         GameObject SlicerRight = Instantiate(Slicer, topEdgeRight, Quaternion.identity);
+
         // isLeft or Right
         SlicerLeft.GetComponent<Slicer>().isLeft = true;
 
