@@ -10,7 +10,8 @@ public class BlockPlacer : MonoBehaviour
     public GameObject Checker;
 
     [HideInInspector]public int i = 0;
-    [HideInInspector]public int matIndex = 0;
+    [HideInInspector]public int matIndex = 1;
+    private int ColorIndex;
 
     [Space]
     public List<GameObject> SpawnedBlock;
@@ -20,6 +21,7 @@ public class BlockPlacer : MonoBehaviour
     [SerializeField] private SlicerSpawner spawner;
     [Space]
     public Material[] randomMat = new Material[5];
+    public Color[] BGColor;
     [Space]
     public float blockHeight = 1f; // Blok yüksekliði
     public float BlockSpeed = 1f;
@@ -56,6 +58,14 @@ public class BlockPlacer : MonoBehaviour
             ResizeCurrent(currentBlock, previousBlock);
             CanResize = false;
         }
+    }
+
+    private void BGColorChange()
+    {
+        Camera.main.backgroundColor = BGColor[ColorIndex];
+        ColorIndex++;
+        if (ColorIndex == BGColor.Length)
+            ColorIndex = 0;
     }
 
     public void SpawnBlock(bool needUp)
@@ -150,6 +160,7 @@ public class BlockPlacer : MonoBehaviour
         else
         {
             Restart();
+            BGColorChange();
             //reloadscene
         }
     }

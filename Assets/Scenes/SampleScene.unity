@@ -275,6 +275,7 @@ MonoBehaviour:
   previousBlock: {fileID: 3676492929570782553}
   Checker: {fileID: 6133553710478350481, guid: 71072b84faa87ba4faa0a33b1d40e93a, type: 3}
   i: 0
+  matIndex: 0
   SpawnedBlock: []
   Limits:
   - {fileID: 561991974}
@@ -286,9 +287,16 @@ MonoBehaviour:
   - {fileID: 2100000, guid: 1c197a8fe384ea5408059d78f895aac4, type: 2}
   - {fileID: 2100000, guid: 62e9c5ccafd69db4bb8a0933f6041e9a, type: 2}
   - {fileID: 2100000, guid: 7a38cc5c9ff24694ebc06368f55c98e5, type: 2}
+  BGColor:
+  - {r: 0.40392157, g: 0.039215688, b: 0.27450982, a: 0}
+  - {r: 0.13033815, g: 0.04690281, b: 0.3207547, a: 0}
+  - {r: 0.035822365, g: 0.3301887, b: 0.05141647, a: 0}
+  - {r: 1, g: 0, b: 0, a: 0}
+  - {r: 0.044010334, g: 0.4056604, b: 0.3100127, a: 0}
   blockHeight: 0.05643766
   BlockSpeed: 1.5
   CanTouch: 1
+  CanResize: 0
   BlockPlacerStartPos: {x: 0, y: 0, z: 0}
 --- !u!1 &561991973
 GameObject:
@@ -774,7 +782,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 2
-  m_BackGroundColor: {r: 0.4056604, g: 0.04018334, b: 0.274155, a: 0}
+  m_BackGroundColor: {r: 0.4056604, g: 0.04018334, b: 0.274155, a: 1}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0

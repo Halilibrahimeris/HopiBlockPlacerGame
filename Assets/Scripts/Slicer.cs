@@ -41,7 +41,7 @@ public class Slicer : MonoBehaviour
             obj.transform.localScale = new Vector3(xScale, obj.transform.localScale.y, obj.transform.localScale.z);
             obj.transform.position = new Vector3((newobj.transform.localScale.x / 2) + obj.transform.position.x, obj.transform.position.y, obj.transform.position.z);
             newobj.AddComponent<Rigidbody>();
-            newobj.GetComponent<MeshRenderer>().material = GameManager.Instance.placer.randomMat[GameManager.Instance.placer.matIndex -1];
+            ChangeMat(newobj);
             Destroy(newobj, 1f);
             doOneTime = false;
         }
@@ -61,10 +61,23 @@ public class Slicer : MonoBehaviour
             obj.transform.localScale = new Vector3(xScale, obj.transform.localScale.y, obj.transform.localScale.z);
             obj.transform.position = new Vector3(obj.transform.position.x - (newobj.transform.localScale.x / 2), obj.transform.position.y, obj.transform.position.z);
             newobj.AddComponent<Rigidbody>();
-            newobj.GetComponent<MeshRenderer>().material = GameManager.Instance.placer.randomMat[GameManager.Instance.placer.matIndex -1];
+            ChangeMat(newobj);
             Destroy(newobj, 1f);
             doOneTime = false;  
         }
         GameManager.Instance.placer.CanResize = true;
+    }
+
+    private void ChangeMat(GameObject newobj)
+    {
+        BlockPlacer place = GameManager.Instance.placer;
+        int index = place.matIndex - 1;
+        if(index < 0)
+        {
+            index = 0;
+        }
+        if(index > place.randomMat.Length)
+            index = place.randomMat.Length;
+        newobj.GetComponent<MeshRenderer>().material = place.randomMat[index];
     }
 }
