@@ -149,22 +149,25 @@ public class BlockPlacer : MonoBehaviour
         }
         else
         {
-            CanTouch = false;
-            for (int i = 0; i < SpawnedBlock.Count; i++) 
-            {
-                Destroy(SpawnedBlock[i]);
-            }
-            SpawnedBlock.Clear();
-            transform.position = BlockPlacerStartPos;
-            Camera.main.transform.position = MainCamStartPos;
-            previousBlock = GameManager.Instance.BaseCube;
-            GameManager.Instance.BaseCube.GetComponent<CubeMovement>().ClearChilds();
-            CanTouch = true;
-            SpawnBlock(false);
+            Restart();
             //reloadscene
         }
     }
-
+    public void Restart()
+    {
+        CanTouch = false;
+        for (int i = 0; i < SpawnedBlock.Count; i++)
+        {
+            Destroy(SpawnedBlock[i]);
+        }
+        SpawnedBlock.Clear();
+        transform.position = BlockPlacerStartPos;
+        Camera.main.transform.position = MainCamStartPos;
+        previousBlock = GameManager.Instance.BaseCube;
+        GameManager.Instance.BaseCube.GetComponent<CubeMovement>().ClearChilds();
+        CanTouch = true;
+        SpawnBlock(false);
+    }
     private void ResizeCurrent(GameObject currentBlock, GameObject previousBlock)
     {
         Debug.Log("Önceki previus block adý: " + previousBlock.name);

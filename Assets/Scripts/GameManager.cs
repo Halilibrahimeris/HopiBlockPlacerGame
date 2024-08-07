@@ -40,7 +40,10 @@ public class GameManager : MonoBehaviour
         }
         else if(CurrentTime <= 0)
         {
-            EndGame();
+            //EndGame();
+            CurrentTime = 30f;
+            StartTime = 30f;
+            placer.Restart();
         }
     }
     private void EndGame()
