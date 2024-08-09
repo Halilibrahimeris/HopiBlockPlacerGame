@@ -32,13 +32,13 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
-        if(CurrentTime != 0)
+        if(CurrentTime != -1)
         {
             StartTime -= Time.deltaTime;
             CurrentTime = Mathf.FloorToInt(StartTime);
             GameTimerText.text = "Timer: " + Mathf.FloorToInt(StartTime).ToString();
         }
-        else if(CurrentTime <= 0)
+        else if(CurrentTime <= -1)
         {
             //EndGame();
             CurrentTime = 30f;

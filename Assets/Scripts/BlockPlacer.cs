@@ -28,6 +28,7 @@ public class BlockPlacer : MonoBehaviour
 
     public bool CanTouch = true;
     private bool OneTime = true;
+    [SerializeField]private bool isHorizantal;
     [HideInInspector] public bool CanResize = false;
 
     [SerializeField]private Vector3 BlockPlacerStartPos;
@@ -50,7 +51,7 @@ public class BlockPlacer : MonoBehaviour
         {
             GameManager.Instance.ScreenClick();
             spawner.Cube = previousBlock;
-            spawner.SpawnSlicer();
+            spawner.SpawnSlicer(isHorizantal);
             PlaceBlock();
         }
         if (CanResize)
@@ -71,6 +72,7 @@ public class BlockPlacer : MonoBehaviour
     public void SpawnBlock(bool needUp)
     {
         i++;
+
         currentBlock = Instantiate(blockPrefab);
         
         currentBlock.name = currentBlock.name + i.ToString();
@@ -80,16 +82,29 @@ public class BlockPlacer : MonoBehaviour
         currentBlock.GetComponent<CubeMovement>().Id += i;
 
         var Movement = currentBlock.GetComponent<CubeMovement>();
-        Movement.Speed = BlockSpeed;
-        Movement.PointA = Limits[0];
-        Movement.PointB = Limits[1];
+        if (i % 2 == 0)
+        {
+            Movement.isHorizontalMove = true;
+            Movement.Speed = BlockSpeed;
+            Movement.PointA = Limits[0];
+            Movement.PointB = Limits[1];
+        }
+        else
+        {
+            Movement.isHorizontalMove = false;
+            Movement.Speed = BlockSpeed;
+            Movement.PointC = Limits[2];
+            Movement.PointD = Limits[3];
+        }
+
+        isHorizantal = Movement.isHorizontalMove;
 
         if (previousBlock != null)
         {
             currentBlock.transform.position = new Vector3(
-                transform.position.x,
+                previousBlock.transform.position.x,
                 previousBlock.transform.position.y + blockHeight,
-                transform.position.z
+                previousBlock.transform.position.z
             );
         }
         else
@@ -129,11 +144,8 @@ public class BlockPlacer : MonoBehaviour
     void PlaceBlock()
     {
         currentBlock.GetComponent<CubeMovement>().CanMove = false;
-        Debug.Log(previousBlock.name + " Calculate'e girdi");
         CalculateHangover();
-        Debug.Log("Calculateden çýktý");
         previousBlock = currentBlock;
-        Debug.Log("previous deðiþti");
         SpawnBlock(true);
     }
 
@@ -176,13 +188,16 @@ public class BlockPlacer : MonoBehaviour
         Camera.main.transform.position = MainCamStartPos;
         previousBlock = GameManager.Instance.BaseCube;
         GameManager.Instance.BaseCube.GetComponent<CubeMovement>().ClearChilds();
+        GameManager.Instance.BaseCube.GetComponent<MeshRenderer>().material = randomMat[matIndex];
         CanTouch = true;
         SpawnBlock(false);
     }
     private void ResizeCurrent(GameObject currentBlock, GameObject previousBlock)
     {
-        Debug.Log("Önceki previus block adý: " + previousBlock.name);
-        Debug.Log("Þu anki current block adý: " + currentBlock);
         currentBlock.transform.localScale = previousBlock.transform.localScale;
+        if(isHorizantal)
+            currentBlock.transform.position = new Vector3(currentBlock.transform.position.x, currentBlock.transform.position.y, previousBlock.transform.position.z);
+        else
+            currentBlock.transform.position = new Vector3(previousBlock.transform.position.x,currentBlock.transform.position.y,currentBlock.transform.position.z);
     }
 }
