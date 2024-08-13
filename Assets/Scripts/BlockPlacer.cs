@@ -184,6 +184,7 @@ public class BlockPlacer : MonoBehaviour
         else
         {
             Debug.Log("Tam olarak içinde degil");
+            SpawnPerfectPlacementItem();
         }
     }
     private bool TriggerCheck(BoxCollider triggerCollider, GameObject objectToCheck)
