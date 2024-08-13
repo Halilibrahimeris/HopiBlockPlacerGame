@@ -27,7 +27,7 @@ public class Slicer : MonoBehaviour
         #region forXAxis
         if (isHorizantal)
         {
-            if (!isLeft && doOneTime)
+            if (isLeft && doOneTime)
             {
                 //set endpoint of obj to left
                 endPoint.x = (obj.transform.position.x) - (obj.transform.localScale.x / 2);
@@ -44,13 +44,12 @@ public class Slicer : MonoBehaviour
                 obj.transform.localScale = new Vector3(xScale, obj.transform.localScale.y, obj.transform.localScale.z);
                 obj.transform.position = new Vector3((newobj.transform.localScale.x / 2) + obj.transform.position.x, obj.transform.position.y, obj.transform.position.z);
                 newobj.AddComponent<Rigidbody>();
+                newobj.AddComponent<BoxCollider>();
                 ChangeMat(newobj);
                 Destroy(newobj, 1f);
                 doOneTime = false;
-                obj.transform.localScale = newobj.transform.localScale;
-                obj.transform.position = newobj.transform.position;
             }
-            else if (isLeft && doOneTime)
+            else if (!isLeft && doOneTime)
             {
                 //set endpoint of obj to right
                 endPoint.x = (obj.transform.position.x) + (obj.transform.localScale.x / 2);
@@ -66,11 +65,10 @@ public class Slicer : MonoBehaviour
                 obj.transform.localScale = new Vector3(xScale, obj.transform.localScale.y, obj.transform.localScale.z);
                 obj.transform.position = new Vector3(obj.transform.position.x - (newobj.transform.localScale.x / 2), obj.transform.position.y, obj.transform.position.z);
                 newobj.AddComponent<Rigidbody>();
+                newobj.AddComponent<BoxCollider>();
                 ChangeMat(newobj);
                 Destroy(newobj, 1f);
                 doOneTime = false;
-                obj.transform.localScale = newobj.transform.localScale;
-                obj.transform.localPosition = newobj.transform.localPosition;
             }
         }
 

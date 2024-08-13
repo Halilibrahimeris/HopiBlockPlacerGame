@@ -307,6 +307,7 @@ MonoBehaviour:
   currentBlock: {fileID: 0}
   previousBlock: {fileID: 3676492929570782553}
   Checker: {fileID: 6133553710478350481, guid: 71072b84faa87ba4faa0a33b1d40e93a, type: 3}
+  PerfectPlacement: {fileID: 3432958286849152088, guid: 87ee7299dd44ed747af24dbb91bcd33b, type: 3}
   i: 0
   matIndex: 0
   SpawnedBlock: []

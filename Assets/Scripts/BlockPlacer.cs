@@ -8,6 +8,7 @@ public class BlockPlacer : MonoBehaviour
     public GameObject currentBlock;
     public GameObject previousBlock;
     public GameObject Checker;
+    public GameObject PerfectPlacement;
 
     [HideInInspector]public int i = 0;
     [HideInInspector]public int matIndex = 1;
@@ -175,6 +176,41 @@ public class BlockPlacer : MonoBehaviour
             BGColorChange();
             //reloadscene
         }
+        if (TriggerCheck(checker.GetComponent<BoxCollider>(), currentBlock))
+        {
+            Debug.Log("Tam olarak içinde");
+            SpawnPerfectPlacementItem();
+        }
+        else
+        {
+            Debug.Log("Tam olarak içinde degil");
+        }
+    }
+    private bool TriggerCheck(BoxCollider triggerCollider, GameObject objectToCheck)
+    {
+        Bounds objectBounds = objectToCheck.GetComponent<Renderer>().bounds;
+
+        // Trigger collider'ýn bounds alaný
+        Bounds triggerBounds = triggerCollider.bounds;
+
+        // Nesnenin bounds'ýnýn trigger bounds'ý içinde olup olmadýðýný kontrol et
+        if (triggerBounds.Contains(objectBounds.min) && triggerBounds.Contains(objectBounds.max))
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+    private void SpawnPerfectPlacementItem()
+    {
+        GameObject Spawnitem = Instantiate(PerfectPlacement, previousBlock.transform.position, Quaternion.identity);
+        Spawnitem.transform.rotation = Quaternion.Euler(-90f, 0f, 0f);
+        Spawnitem.transform.SetParent(previousBlock.transform);
+        Spawnitem.transform.localPosition = new Vector3(0f, -(previousBlock.transform.localScale.y / 2), 0f);
+        var main = Spawnitem.GetComponent<ParticleSystem>().main;
+        main.startColor = previousBlock.GetComponent<MeshRenderer>().materials[0].color;
     }
     public void Restart()
     {
