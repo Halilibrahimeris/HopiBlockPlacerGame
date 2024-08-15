@@ -12,6 +12,7 @@ public class CubeMovement : MonoBehaviour
 
     public bool CanMove = true;
     public bool isHorizontalMove = true;
+
     public int Id = 0;
     public float Speed;
     public Transform[] t;

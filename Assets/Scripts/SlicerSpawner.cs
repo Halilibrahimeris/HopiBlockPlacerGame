@@ -8,6 +8,7 @@ public class SlicerSpawner : MonoBehaviour
     public GameObject Slicer;
     public GameObject Cube;
 
+
     public void SpawnSlicer(bool isHorizantal)
     {
 
@@ -27,8 +28,8 @@ public class SlicerSpawner : MonoBehaviour
         if (isHorizantal)
         {
             // Cube'un üst yüzeyindeki kenarlarýn pozisyonunu hesapla
-            Vector3 topEdgeLeft = topCenter + new Vector3(-cubeTransform.localScale.x / 2, 0, 0);
-            Vector3 topEdgeRight = topCenter + new Vector3(cubeTransform.localScale.x / 2, 0, 0);
+            Vector3 topEdgeLeft = topCenter + new Vector3(-cubeTransform.localScale.x / 2, 0.01f, 0);
+            Vector3 topEdgeRight = topCenter + new Vector3(cubeTransform.localScale.x / 2, 0.01f, 0);
 
             // Slicer nesnesini instantiate et ve konumunu ayarla
             GameObject SlicerLeft = Instantiate(Slicer, topEdgeLeft, Quaternion.identity);
@@ -37,6 +38,7 @@ public class SlicerSpawner : MonoBehaviour
             // isLeft or Right and isHorizantal
             SlicerLeft.GetComponent<Slicer>().isHorizantal = true;
             SlicerLeft.GetComponent<Slicer>().isLeft = true;
+
             SlicerRight.GetComponent<Slicer>().isHorizantal=true;
 
             // Slicer'ý Cube'un y ekseni boyunca yukarý doðru uzat
@@ -90,10 +92,6 @@ public class SlicerSpawner : MonoBehaviour
             SlicerBack.GetComponent<Slicer>().canSlice = true;
             SlicerBack.transform.position = new Vector3(SlicerBack.transform.position.x, SlicerBack.transform.position.y + 0.01f, SlicerBack.transform.position.z);
         }
-
-
-
-
     }
-   
+
 }

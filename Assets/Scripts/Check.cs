@@ -12,9 +12,10 @@ public class Check : MonoBehaviour
     }
     private void OnTriggerEnter(Collider other)
     {
-        if (other.tag == "CanSlice" && other.GetComponent<CubeMovement>().Id == (GameManager.Instance.placer.i -1))
+        if (other.tag == "CanSlice" && other.gameObject.GetComponent<CubeMovement>() != null)
         {
-            CheckRes = true;
+            if(other.GetComponent<CubeMovement>().Id == (GameManager.Instance.placer.i - 1))
+                CheckRes = true;
         }
 
     }

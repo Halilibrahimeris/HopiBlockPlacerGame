@@ -120,7 +120,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   PointA: {fileID: 0}
   PointB: {fileID: 0}
+  PointC: {fileID: 0}
+  PointD: {fileID: 0}
   CanMove: 1
+  isHorizontalMove: 1
   Id: 0
   Speed: 0
   t: []

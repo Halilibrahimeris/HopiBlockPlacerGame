@@ -10,6 +10,7 @@ public class GameManager : MonoBehaviour
     public GameObject SpawnObj;
     public GameObject BaseCube;
     public GameObject ScreenClickObj;
+    public GameObject ScreenClickText;
     [Space]
     public TextMeshProUGUI RestartCounter;
     public TextMeshProUGUI ScoreText;
@@ -62,6 +63,7 @@ public class GameManager : MonoBehaviour
     public void ScreenClick()
     {
         ScreenClickObj.SetActive(false);
+        ScreenClickText.SetActive(false);
     }
     /*public IEnumerator ResetCounter(BlockPlacer placer)
     {

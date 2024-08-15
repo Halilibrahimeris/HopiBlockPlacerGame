@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class Slicer : MonoBehaviour
@@ -9,15 +10,23 @@ public class Slicer : MonoBehaviour
     public bool doOneTime = true;
     private Vector3 endPoint;
 
-    public GameObject current;
-    public GameObject previous;
+    BlockPlacer placer;
+
+    private void Start()
+    {
+        placer = GameManager.Instance.placer;
+    }
+
     private void OnTriggerEnter(Collider other)
     {
-        if(other.tag == "CanSlice" && canSlice && other.GetComponent<CubeMovement>().Id == (GameManager.Instance.placer.i -1))
+        if(other.tag == "CanSlice" && canSlice && other.GetComponent<CubeMovement>() != null)
         {
-            // Dokunulan noktayý al
-            Vector3 contactPoint = other.ClosestPoint(transform.position);
-            CalculateSlice(other.gameObject, contactPoint);
+            if(other.GetComponent<CubeMovement>().Id == (GameManager.Instance.placer.i - 1))
+            {
+                // Dokunulan noktayý al
+                Vector3 contactPoint = other.ClosestPoint(transform.position);
+                CalculateSlice(other.gameObject, contactPoint);
+            }
         }
         
     }
@@ -45,7 +54,7 @@ public class Slicer : MonoBehaviour
                 obj.transform.position = new Vector3((newobj.transform.localScale.x / 2) + obj.transform.position.x, obj.transform.position.y, obj.transform.position.z);
                 newobj.AddComponent<Rigidbody>();
                 newobj.AddComponent<BoxCollider>();
-                ChangeMat(newobj);
+                _ChangeMaterial(obj,newobj);
                 Destroy(newobj, 1f);
                 doOneTime = false;
             }
@@ -66,7 +75,7 @@ public class Slicer : MonoBehaviour
                 obj.transform.position = new Vector3(obj.transform.position.x - (newobj.transform.localScale.x / 2), obj.transform.position.y, obj.transform.position.z);
                 newobj.AddComponent<Rigidbody>();
                 newobj.AddComponent<BoxCollider>();
-                ChangeMat(newobj);
+                _ChangeMaterial(obj, newobj);
                 Destroy(newobj, 1f);
                 doOneTime = false;
             }
@@ -79,18 +88,13 @@ public class Slicer : MonoBehaviour
         {
             if (!isFront && doOneTime)
             {
-                Debug.Log("Bozuk taraf çalýþtý");
                 // obj'nin uç noktasýný sol tarafa (arka) ayarla
                 endPoint.z = (obj.transform.position.z) - (obj.transform.localScale.z / 2);
-                Debug.Log("Endpoint Z ayarlandý: " + endPoint.z);
                 // Ölçeði hesapla
                 GameObject newobj = Instantiate(GameManager.Instance.SpawnObj);
-                Debug.Log("Yeni obj spawnlandý");
-                newobj.GetComponent<MeshRenderer>().materials[0] = obj.GetComponent<MeshRenderer>().materials[0];
+                newobj.GetComponent<MeshRenderer>().material = obj.GetComponent<MeshRenderer>().material;
                 float zScale = Mathf.Abs(endPoint.z - contactPoint.z);
-                Debug.Log("zScale hesaplandý: " + zScale);
                 newobj.transform.localScale = new Vector3(obj.transform.localScale.x, obj.transform.localScale.y, zScale);
-                Debug.Log("Yeni obj'nin scale'i hesaplandý: " + newobj.transform.localScale);
                 // Pozisyonu hesapla
                 float zPos = (endPoint.z + contactPoint.z) / 2;
                 newobj.transform.position = new Vector3(obj.transform.position.x, obj.transform.position.y, zPos);
@@ -99,7 +103,7 @@ public class Slicer : MonoBehaviour
                 obj.transform.localScale = new Vector3(obj.transform.localScale.x, obj.transform.localScale.y, zScale);
                 obj.transform.position = new Vector3(obj.transform.position.x, obj.transform.position.y, (newobj.transform.localScale.z / 2) + obj.transform.position.z);
                 newobj.AddComponent<Rigidbody>();
-                ChangeMat(newobj);
+                _ChangeMaterial(obj,newobj);
                 Destroy(newobj, 1f);
                 doOneTime = false;
             }
@@ -119,7 +123,7 @@ public class Slicer : MonoBehaviour
                 obj.transform.localScale = new Vector3(obj.transform.localScale.x, obj.transform.localScale.y, zScale);
                 obj.transform.position = new Vector3(obj.transform.position.x, obj.transform.position.y, obj.transform.position.z - (newobj.transform.localScale.z / 2));
                 newobj.AddComponent<Rigidbody>();
-                ChangeMat(newobj);
+                _ChangeMaterial(obj,newobj);
                 Destroy(newobj, 1f);
                 doOneTime = false;
             }
@@ -130,16 +134,8 @@ public class Slicer : MonoBehaviour
         GameManager.Instance.placer.CanResize = true;
     }
 
-    private void ChangeMat(GameObject newobj)
+    private void _ChangeMaterial(GameObject MatObject,GameObject ChangeObject)
     {
-        BlockPlacer place = GameManager.Instance.placer;
-        int index = place.matIndex - 1;
-        if(index < 0)
-        {
-            index = 0;
-        }
-        if(index > place.randomMat.Length)
-            index = place.randomMat.Length;
-        newobj.GetComponent<MeshRenderer>().material = place.randomMat[index];
+        ChangeObject.GetComponent<MeshRenderer>().material = MatObject.GetComponent<MeshRenderer>().materials[0];
     }
 }

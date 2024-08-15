@@ -10,8 +10,8 @@ public class BlockPlacer : MonoBehaviour
     public GameObject Checker;
     public GameObject PerfectPlacement;
 
-    [HideInInspector]public int i = 0;
-    [HideInInspector]public int matIndex = 1;
+    public int i = 0;
+    public int matIndex = 1;
     private int ColorIndex;
 
     [Space]
@@ -80,7 +80,7 @@ public class BlockPlacer : MonoBehaviour
         SpawnedBlock.Add(currentBlock);
         ChangeMaterial();
 
-        currentBlock.GetComponent<CubeMovement>().Id += i;
+        currentBlock.GetComponent<CubeMovement>().Id = i;
 
         var Movement = currentBlock.GetComponent<CubeMovement>();
         if (i % 2 == 0)
@@ -141,7 +141,6 @@ public class BlockPlacer : MonoBehaviour
         if (matIndex == randomMat.Length)
             matIndex = 0;
     }
-
     void PlaceBlock()
     {
         currentBlock.GetComponent<CubeMovement>().CanMove = false;
@@ -153,6 +152,7 @@ public class BlockPlacer : MonoBehaviour
     public void CalculateHangover() 
     {
         GameObject checker = Instantiate(Checker, previousBlock.transform.position, Quaternion.identity);
+        checker.name = "Checker" + i;
         checker.transform.localScale = previousBlock.transform.localScale;
         checker.transform.position = previousBlock.transform.position;
         checker.transform.SetParent(previousBlock.transform);
@@ -184,7 +184,6 @@ public class BlockPlacer : MonoBehaviour
         else
         {
             Debug.Log("Tam olarak içinde degil");
-            SpawnPerfectPlacementItem();
         }
     }
     private bool TriggerCheck(BoxCollider triggerCollider, GameObject objectToCheck)
