@@ -13,7 +13,6 @@ GameObject:
   - component: {fileID: 164090565046860929}
   - component: {fileID: 8152596369972473248}
   - component: {fileID: 2924380166083660987}
-  - component: {fileID: 8832336215299728627}
   m_Layer: 0
   m_Name: Cube
   m_TagString: CanSlice
@@ -128,30 +127,3 @@ MonoBehaviour:
   Id: 0
   Speed: 0
   t: []
---- !u!54 &8832336215299728627
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 144448024751470183}
-  serializedVersion: 4
-  m_Mass: 100
-  m_Drag: 0
-  m_AngularDrag: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 0
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 112
-  m_CollisionDetection: 0
