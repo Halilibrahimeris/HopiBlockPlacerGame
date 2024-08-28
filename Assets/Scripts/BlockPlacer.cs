@@ -24,7 +24,7 @@ public class BlockPlacer : MonoBehaviour
     public Material[] randomMat = new Material[5];
     public Color[] BGColor;
     [Space]
-    public float blockHeight = 1f; // Blok yüksekliði
+    public float blockHeight = 1f; // Blok yï¿½ksekliï¿½i
     public float BlockSpeed = 1f;
 
     public bool CanTouch = true;
@@ -54,6 +54,7 @@ public class BlockPlacer : MonoBehaviour
             spawner.Cube = previousBlock;
             spawner.SpawnSlicer(isHorizantal);
             PlaceBlock();
+            SoundManager.Instance.PlayMainSound(SoundManager.BlockSoundTypes.Click);
         }
         if (CanResize)
         {
@@ -110,7 +111,7 @@ public class BlockPlacer : MonoBehaviour
         }
         else
         {
-            // Ýlk blok için baþlangýç pozisyonu belirle
+            // ï¿½lk blok iï¿½in baï¿½langï¿½ï¿½ pozisyonu belirle
             currentBlock.transform.position = transform.position;
         }
         if (OneTime)
@@ -120,7 +121,7 @@ public class BlockPlacer : MonoBehaviour
         }
         if (needUp)
         {
-            // Kamerayý yukarý kaydýr
+            // Kamerayï¿½ yukarï¿½ kaydï¿½r
             Camera.main.transform.position = new Vector3(
                 Camera.main.transform.position.x,
                 Camera.main.transform.position.y + blockHeight + 0.01f,
@@ -178,22 +179,22 @@ public class BlockPlacer : MonoBehaviour
         }
         if (TriggerCheck(checker.GetComponent<BoxCollider>(), currentBlock))
         {
-            Debug.Log("Tam olarak içinde");
+            Debug.Log("Tam olarak iï¿½inde");
             SpawnPerfectPlacementItem();
         }
         else
         {
-            Debug.Log("Tam olarak içinde degil");
+            Debug.Log("Tam olarak iï¿½inde degil");
         }
     }
     private bool TriggerCheck(BoxCollider triggerCollider, GameObject objectToCheck)
     {
         Bounds objectBounds = objectToCheck.GetComponent<Renderer>().bounds;
 
-        // Trigger collider'ýn bounds alaný
+        // Trigger collider'ï¿½n bounds alanï¿½
         Bounds triggerBounds = triggerCollider.bounds;
 
-        // Nesnenin bounds'ýnýn trigger bounds'ý içinde olup olmadýðýný kontrol et
+        // Nesnenin bounds'ï¿½nï¿½n trigger bounds'ï¿½ iï¿½inde olup olmadï¿½ï¿½ï¿½nï¿½ kontrol et
         if (triggerBounds.Contains(objectBounds.min) && triggerBounds.Contains(objectBounds.max))
         {
             return true;
